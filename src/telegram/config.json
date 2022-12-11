@@ -1,0 +1,6 @@
+{
+    "tokenfile": "token.txt",
+    "subscribersfile": "subscribers.txt",
+    "timedumpdelay": 30,
+    "timedumpfile": "time.txt"
+}
