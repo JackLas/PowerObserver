@@ -5,6 +5,7 @@ import argparse
 import sys
 import json
 import datetime
+import urllib.request
 
 def get_config():
     parser = argparse.ArgumentParser()
@@ -15,6 +16,7 @@ def get_config():
         sys.exit(-1)
 
     with open(args.config) as config:
+        print(f"Config file: {args.config}")
         return json.load(config)
 
 def get_token(path=""):
@@ -32,3 +34,12 @@ def convert_duration(seconds):
 
 def convert_date(epoch_int):
     return time.strftime("%d.%m.%Y %H:%M:%S", time.localtime(epoch_int))
+
+def wait_for_internet(testurl="http://google.com"):
+    while True:
+        try:
+            urllib.request.urlopen(testurl, timeout=30.0)
+            return
+        except:
+            print("Internet is not available, reconnect")
+            continue

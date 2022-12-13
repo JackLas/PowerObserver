@@ -15,12 +15,23 @@ class Timing:
         self.last_uptime = self.start_time
 
         if not os.path.exists(dump_file):
-            open(dump_file, 'x')
+            print(f"Create file: {dump_file}")
+            file = open(dump_file, 'x')
+            file.close()
+            self.__dump_time()
         else:
-            with open(self.dump_file, "r") as dump:
-                line = dump.readline()
-                if line:
-                    self.last_uptime = int(line)
+            try:
+                with open(self.dump_file, "r") as dump:
+                    line = dump.readline()
+                    if line:
+                        self.last_uptime = int(line)
+            except: # in case if file is corrupted
+                print(f"[WARN] {dump_file} is corrputed") 
+                if os.path.exists(dump_file):
+                    os.remove(dump_file)
+                file = open(dump_file, 'x')
+                file.close()
+                self.__dump_time()
 
         self.repeater = RepeatTimer(self.dump_delay, self.__dump_time)
         self.repeater.start()
@@ -43,3 +54,4 @@ class Timing:
     def __dump_time(self):
         with open(self.dump_file, "w") as dump:
             dump.write(str(utils.time_now()))
+            os.sync()

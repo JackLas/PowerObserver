@@ -2,15 +2,37 @@ import telebot
 import utils
 import subscribers
 import timing
+from time import sleep
+import logging
 
 if __name__ == "__main__":
+    print("[Init] wait for internet")
+    utils.wait_for_internet()
+    sleep(5)
+    print("[Init] internet is available")
+
+    print("[Init] get config")
     config = utils.get_config()
 
+    print("[Init] create time handler")
     time = timing.Timing(config["timedumpdelay"], config["timedumpfile"])
 
+    print("[Init] create subscribers handler")
     subs = subscribers.SubscribersHandler(config["subscribersfile"])
-    bot = telebot.TeleBot(utils.get_token(config["tokenfile"]))
 
+    print("[Init] create bot handler")
+    bot_logger = logging.getLogger('TeleBot')
+    bot_logger.setLevel(logging.DEBUG)
+    bot = None
+    while not bot:
+        try:
+            bot = telebot.TeleBot(utils.get_token(config["tokenfile"]))
+        except:
+            print("[Init] bot connection error. Reconnect...")
+            sleep(5)
+            continue
+
+    print("[Init] set bot commands")
     bot.set_my_commands([
         telebot.types.BotCommand("subscribe", "to get notifications"), 
         telebot.types.BotCommand("unsubscribe", "to not get notifications"), 
