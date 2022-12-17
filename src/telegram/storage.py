@@ -25,7 +25,7 @@ class Storage:
 class Database(Storage):
     def __init__(self, filename):
         self.db = filename
-        self.execute_against_database("CREATE TABLE IF NOT EXISTS subscribers (id string)")
+        self.execute_against_database("CREATE TABLE IF NOT EXISTS subscribers (id integer)")
         self.execute_against_database("CREATE TABLE IF NOT EXISTS timestamp (value integer)")
 
     def execute_against_database(self, sql, params = tuple()):
@@ -36,15 +36,15 @@ class Database(Storage):
         connection.close()
         return res
 
-    def add_time_dump(self, time):
+    def set_time_dump(self, time):
         if len(self.execute_against_database("SELECT * FROM timestamp")) == 0:
             self.execute_against_database("INSERT INTO timestamp VALUES(?)", (time,))
             return
         self.execute_against_database("UPDATE timestamp SET value=?", (time,))
 
-    def get_time_dump(self):
+    def get_time_dump(self, default = 0):
         values = self.execute_against_database("SELECT * FROM timestamp")
-        return 0 if len(values) == 0 else values[0][0]
+        return default if len(values) == 0 else values[0][0]
 
     def add_subscriber(self, id):
         if not self.is_subscriber(id):

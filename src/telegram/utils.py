@@ -1,3 +1,4 @@
+import subprocess
 import time
 import os
 import pathlib
@@ -43,3 +44,10 @@ def wait_for_internet(testurl="http://google.com"):
         except:
             print("Internet is not available, reconnect")
             continue
+
+def wait_for_system_time_sync():
+    while True:
+        output = subprocess.check_output(['timedatectl']).decode('utf-8')
+        if "System clock synchronized: yes" in output:
+            break
+        time.sleep(5)

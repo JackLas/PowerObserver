@@ -5,8 +5,7 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=on-failure
-RestartSec=3s
-ExecStartPre=/root/restore.sh /root/telegram/ /usr/bin/powerobserver
+RestartSec=5s
 ExecStart=/usr/bin/python3 /usr/bin/powerobserver/power_observer_bot.py --config /usr/bin/powerobserver/config.json
 
 [Install]

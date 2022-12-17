@@ -1,6 +1,5 @@
 {
     "tokenfile": "/usr/bin/powerobserver/token",
-    "subscribersfile": "/usr/bin/powerobserver/subscribers.db",
-    "timedumpfile": "/usr/bin/powerobserver/time.db",
+    "databasefile": "/usr/bin/powerobserver/data.db",
     "timedumpdelay": 30
 }
